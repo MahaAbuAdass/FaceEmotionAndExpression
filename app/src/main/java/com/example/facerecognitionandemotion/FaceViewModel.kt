@@ -31,7 +31,7 @@ class FaceViewModel @Inject constructor(private val apiRepository: Repository) :
                    faceResult.postValue((Resource.Error(response.message)))
                }
                else ->{
-                   faceResult.postValue(Resource.Loading(true))
+                   faceResult.postValue(Resource.Loading(false))
                }
 
            }
