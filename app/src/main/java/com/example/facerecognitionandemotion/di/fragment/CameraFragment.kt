@@ -67,6 +67,8 @@ class CameraFragment : Fragment() {
         binding.btnSwitchCamera.setOnClickListener {
             switchCamera()
         }
+        observerViewModel()
+
 
     }
 
@@ -164,7 +166,6 @@ class CameraFragment : Fragment() {
         Log.v("image upload", "Creating multipart body")
 
         faceViewModel?.getData(imageFile)
-        observerViewModel()
     }
 
     override fun onDestroyView() {
