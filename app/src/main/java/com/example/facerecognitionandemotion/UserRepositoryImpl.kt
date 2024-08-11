@@ -1,23 +1,24 @@
 package com.example.facerecognitionandemotion
 
-import okhttp3.MediaType.Companion.toMediaType
+import android.util.Log
 import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
-import java.io.File
+import retrofit2.HttpException
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(private val userApi: UserApi) : Repository {
-    override suspend fun getUserFaceResult(faceImage: File): Resource<UserFaceModel> {
+
+    override suspend fun getUserFaceResult(faceImage: MultipartBody.Part): Resource<UserFaceModel> {
         return try {
-            val requestFile = faceImage.asRequestBody("image/jpeg".toMediaType())
-            val body = MultipartBody.Part.createFormData("file", faceImage.name, requestFile)
-            val result = userApi.userFaceResult(body)
+            val result = userApi.userFaceResult(faceImage)
+            Log.v("success for the api", result.toString())
             Resource.Success(result)
+        } catch (e: HttpException) {
+            val errorBody = e.response()?.errorBody()?.string() ?: "Unknown error"
+            Log.v("error for the api", errorBody)
+            Resource.Error(errorBody)
         } catch (e: Exception) {
-            Resource.Error(e.message)
+            Log.v("exception for the api", e.toString())
+            Resource.Error(e.message ?: "An unknown error occurred")
         }
     }
 }
-
-
-
